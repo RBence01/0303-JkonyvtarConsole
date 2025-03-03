@@ -1,10 +1,8 @@
 package hu.petrik;
 
 import java.sql.*;
-import java.util.ArrayList;
-import java.util.Comparator;
-import java.util.List;
-import java.util.Scanner;
+import java.sql.Date;
+import java.util.*;
 
 public class Statistics {
     private List<Book> books;
@@ -26,6 +24,21 @@ public class Statistics {
 
         Book longest = books.stream().max(Comparator.comparingInt(Book::getPage_count)).orElse(null);
         System.out.printf("Leghosszabb könyv:\nSzerző: %s\nCím: %s\nKiadás éve: %d\nOldalszám: %d\n", longest.getAuthor(), longest.getTitle(), longest.getPublish_year(), longest.getPage_count());
+
+        Map<String, Integer> count = new HashMap<String, Integer>();
+        String maxAuth = "nincs";
+        int max = 0;
+
+        for (Book e : books) {
+            if (count.containsKey(e.getAuthor())) count.put(e.getAuthor(), count.get(e.getAuthor()) + 1);
+            else count.put(e.getAuthor(), 1);
+            if (count.get(e.getAuthor()) > max) {
+                max = count.get(e.getAuthor());
+                maxAuth = e.getAuthor();
+            }
+        }
+
+        System.out.printf("A legtöbb könyvvel rendelkező szerző: %s\n", maxAuth);
 
         System.out.print("Adja meg egy könyv címét: ");
         String input = sc.nextLine().toLowerCase();
